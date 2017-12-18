@@ -1,5 +1,14 @@
 package com.android.cracking;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+
 import com.android.cracking.utils.FileUtils;
 import com.android.cracking.utils.JavaUtils;
 import com.android.cracking.utils.ShellUtils.ShellResult;
@@ -50,7 +59,7 @@ public class main {
 		return (result.code == 0);
 	}
 
-	static void runJava2smali() {
+	static void runJava2smali(boolean dumpSmali) {
 		System.out
 				.println("=======================================================");
 		System.out.println("java2class");
@@ -63,12 +72,53 @@ public class main {
 						.println("=======================================================");
 				System.out.println("dex2smali");
 				if (runDex2smali()) {
-
+					if (dumpSmali) {
+						System.out
+								.println("=======================================================");
+						printSmali();
+					}
 				}
 			}
 		}
 		rmClassPath();
 		rmDex();
+	}
+
+	static void printSmali() {
+		printSmali(new File(SMALIPATH));
+	}
+
+	static void printSmali(File dir) {
+		if (dir.exists()) {
+			if (dir.isDirectory()) {
+				if (dir.isDirectory()) {
+					String[] list = dir.list();
+					for (int i = 0; i < list.length; i++) {
+						printSmali(new File(dir, list[i]));
+					}
+				}
+			} else {
+				if (dir.getName().endsWith(".smali")) {
+					System.out.println(dir.getPath());
+					dumpFile(dir);
+					System.out.println("");
+				}
+			}
+		}
+	}
+
+	static void dumpFile(File file) {
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			String strLine;
+			while ((strLine = reader.readLine()) != null) {
+				System.out.println(strLine);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	static void rmClassPath() {
@@ -88,6 +138,14 @@ public class main {
 	}
 
 	public static void main(String[] args) {
-		runJava2smali();
+		boolean dumpSmali = false;
+		for (int i = 0; i < args.length; i++) {
+			String string = args[i];
+			//System.out.println(string);
+			if ("dumpsmali".equals(string)) {
+				dumpSmali = true;
+			}
+		}
+		runJava2smali(dumpSmali);
 	}
 }
