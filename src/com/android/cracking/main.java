@@ -1,16 +1,8 @@
 package com.android.cracking;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
-
 import com.android.cracking.utils.FileUtils;
 import com.android.cracking.utils.JavaUtils;
+import com.android.cracking.utils.ShellUtils;
 import com.android.cracking.utils.ShellUtils.ShellResult;
 
 public class main {
@@ -20,33 +12,19 @@ public class main {
 	static final String SOURCEPATH = "./java";
 	static final String SMALIPATH = "./smali";
 
-	static void printResult(ShellResult result) {
-		System.out.println("resultCode: " + result.code);
-		if (!result.success.isEmpty()) {
-			System.out.println("resultSuccess: " + result.success);
-		}
-		if (!result.error.isEmpty()) {
-			System.out.println("resultError: " + result.error);
-		}
-		if (!result.exception.isEmpty()) {
-			System.out.println("resultException: " + result.exception);
-		}
-	}
-
 	static boolean runJava2class() {
 		rmClassPath();
-
 		FileUtils.mkDirs(CLASSPATH);
 
 		ShellResult result = JavaUtils.java2class(LIBPATH, CLASSPATH,
 				SOURCEPATH);
-		printResult(result);
+		ShellUtils.printResult(result);
 		return (result.code == 0);
 	}
 
 	static boolean runClass2dex() {
 		ShellResult result = JavaUtils.class2dex(LIBPATH, CLASSPATH);
-		printResult(result);
+		ShellUtils.printResult(result);
 		return (result.code == 0);
 	}
 
@@ -55,7 +33,7 @@ public class main {
 		FileUtils.mkDirs(SMALIPATH);
 
 		ShellResult result = JavaUtils.dex2smali(LIBPATH, SMALIPATH);
-		printResult(result);
+		ShellUtils.printResult(result);
 		return (result.code == 0);
 	}
 
@@ -85,40 +63,7 @@ public class main {
 	}
 
 	static void printSmali() {
-		printSmali(new File(SMALIPATH));
-	}
-
-	static void printSmali(File dir) {
-		if (dir.exists()) {
-			if (dir.isDirectory()) {
-				if (dir.isDirectory()) {
-					String[] list = dir.list();
-					for (int i = 0; i < list.length; i++) {
-						printSmali(new File(dir, list[i]));
-					}
-				}
-			} else {
-				if (dir.getName().endsWith(".smali")) {
-					System.out.println(dir.getPath());
-					dumpFile(dir);
-					System.out.println("");
-				}
-			}
-		}
-	}
-
-	static void dumpFile(File file) {
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader(file));
-			String strLine;
-			while ((strLine = reader.readLine()) != null) {
-				System.out.println(strLine);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		FileUtils.printFiles(SMALIPATH, ".smali");
 	}
 
 	static void rmClassPath() {
@@ -141,7 +86,7 @@ public class main {
 		boolean dumpSmali = false;
 		for (int i = 0; i < args.length; i++) {
 			String string = args[i];
-			//System.out.println(string);
+			// System.out.println(string);
 			if ("dumpsmali".equals(string)) {
 				dumpSmali = true;
 			}

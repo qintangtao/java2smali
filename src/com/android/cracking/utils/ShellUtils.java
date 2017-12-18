@@ -23,6 +23,19 @@ public class ShellUtils {
 		}
 	}
 
+	public static void printResult(ShellResult result) {
+		System.out.println("resultCode: " + result.code);
+		if (!result.success.isEmpty()) {
+			System.out.println("resultSuccess: " + result.success);
+		}
+		if (!result.error.isEmpty()) {
+			System.out.println("resultError: " + result.error);
+		}
+		if (!result.exception.isEmpty()) {
+			System.out.println("resultException: " + result.exception);
+		}
+	}
+	
 	public static ShellResult exec(String command) {
 		return exec(command, true);
 	}
