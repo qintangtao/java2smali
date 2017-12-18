@@ -101,6 +101,6 @@ public class FileUtils {
 	}
 	
 	public static void printFiles(String path) {
-		printFiles(new File(path), "");
+		printFiles(path, "");
 	}
 }
