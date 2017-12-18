@@ -155,4 +155,21 @@ public class FileUtils {
 	public static void printFiles(String path) {
 		printFiles(path, "");
 	}
+	
+	public static void openFiles(String open, File dir, String endsWith) {
+		if (dir.exists()) {
+			if (dir.isDirectory()) {
+				if (dir.isDirectory()) {
+					String[] list = dir.list();
+					for (int i = 0; i < list.length; i++) {
+						openFiles(open, new File(dir, list[i]), endsWith);
+					}
+				}
+			} else {
+				if (endsWith.isEmpty() || dir.getName().endsWith(endsWith)) {
+					ShellUtils.exec(open+ " " + dir);
+				}
+			}
+		}
+	}
 }

@@ -64,7 +64,7 @@ public class main {
 		return (result.code == 0);
 	}
 
-	static void runJava2smali(String javaFile, boolean dumpSmali) {
+	static void runJava2smali(String javaFile, boolean dumpSmali, String openFile) {
 		//fixPath();
 		MyLog.d(TAG, WORKPATH);
 		
@@ -85,6 +85,9 @@ public class main {
 								.println("=======================================================");
 						printSmali();
 					}
+					if (!openFile.isEmpty()) {
+						openSmali(openFile);
+					}
 				}
 			}
 		}
@@ -95,7 +98,11 @@ public class main {
 	static void printSmali() {
 		FileUtils.printFiles(SMALIPATH, ".smali");
 	}
-
+	
+	static void openSmali(String openFile) {
+		FileUtils.openFiles(openFile, new File(SMALIPATH), ".smali");
+	}
+	
 	static void rmClassPath() {
 		if (FileUtils.isDir(CLASSPATH)) {
 			FileUtils.rmDir(CLASSPATH);
@@ -112,21 +119,25 @@ public class main {
 		FileUtils.rmDir(WORKPATH + File.separator + "classes.dex");
 	}
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args) {		
 		boolean dumpSmali = false;
 		String javaFile = "";
+		String openFile = "";
 		for (int i = 0; i < args.length; i++) {
 			String string = args[i];
 			MyLog.d(TAG, string);
-			if ("dumpsmali".equals(string)) {
+			if ("dumpSmali".equals(string)) {
 				dumpSmali = true;
+			} else if ("-open".equals(string)) {
+				if ((i+1) < args.length) {
+					openFile = args[i+1];
+				}
 			} else if ("-java".equals(string)) {
 				if ((i+1) < args.length) {
 					javaFile = args[i+1];
 				}
 			}
 		}
-		runJava2smali(javaFile, dumpSmali);
+		runJava2smali(javaFile, dumpSmali, openFile);
 	}
 }
