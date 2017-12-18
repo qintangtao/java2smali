@@ -61,12 +61,12 @@ public class ShellUtils {
 
 				String strInput;
 				while ((strInput = bufferedReaderInput.readLine()) != null) {
-					sbSuccess.append(strInput);
+					sbSuccess.append(strInput).append("\r\n");
 				}
 
 				String strError;
 				while ((strError = bufferedReaderError.readLine()) != null) {
-					sbError.append(strError);
+					sbError.append(strError).append("\r\n");
 				}
 			}
 		} catch (Exception e) {
