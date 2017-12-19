@@ -9,18 +9,18 @@ public class JavaUtils {
 			String sourcePath) {
 		String javaPath = sourcePath;
 		sourcePath = javaPath.substring(0, javaPath.lastIndexOf(File.separator));
-		return ShellUtils.exec("javac -classpath " + libPath + File.separator + "android.jar;"
-				+ classPath + " -d " + classPath + " -sourcepath " + sourcePath
-				+ " " + javaPath);
+		return ShellUtils.exec("javac -classpath \"" + libPath + File.separator + "android.jar\";\""
+				+ classPath + "\" -d \"" + classPath + "\" -sourcepath \"" + sourcePath
+				+ "\" " + javaPath + "");
 	}
 
 	public static ShellResult class2dex(String libPath, String classPath) {
-		return ShellUtils.exec("java -jar " + libPath
-				+ File.separator + "dx.jar --dex --output=classes.dex " + classPath);
+		return ShellUtils.exec("java -jar \"" + libPath
+				+ File.separator + "dx.jar\" --dex --output=classes.dex \"" + classPath + "\"");
 	}
 
 	public static ShellResult dex2smali(String libPath, String smaliPath) {
-		return ShellUtils.exec("java -jar " + libPath + File.separator + "baksmali.jar -o "
-				+ smaliPath + " classes.dex");
+		return ShellUtils.exec("java -jar \"" + libPath + File.separator + "baksmali.jar\" -o \""
+				+ smaliPath + "\" classes.dex");
 	}
 }
